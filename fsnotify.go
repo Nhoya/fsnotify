@@ -29,6 +29,11 @@ const (
 	Remove
 	Rename
 	Chmod
+	Open
+	Close
+	CloseWrite
+	CloseNoWrite
+	Access
 )
 
 func (op Op) String() string {
@@ -50,6 +55,21 @@ func (op Op) String() string {
 	if op&Chmod == Chmod {
 		buffer.WriteString("|CHMOD")
 	}
+	if op&Open == Open {
+		buffer.WriteString("|OPEN")
+	}
+	if op&Close == Close {
+		buffer.WriteString("|CLOSE")
+	}
+	if op&CloseWrite == CloseWrite {
+		buffer.WriteString("|CLOSE_WRITE")
+	}
+	if op&CloseNoWrite == CloseNoWrite {
+		buffer.WriteString("|CLOSE_NOWRITE")
+	}
+	if op&Access == Access {
+		buffer.WriteString("|ACCESS")
+	}
 	if buffer.Len() == 0 {
 		return ""
 	}
@@ -62,5 +82,5 @@ func (e Event) String() string {
 	return fmt.Sprintf("%q: %s", e.Name, e.Op.String())
 }
 
-// Common errors that can be reported by a watcher
+// ErrEventOverflow contains common errors that can be reported by a watcher
 var ErrEventOverflow = errors.New("fsnotify queue overflow")
